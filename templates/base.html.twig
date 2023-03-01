@@ -24,8 +24,8 @@
     <!-- Nav -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a href="./" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none header-logo">
-                <img src="{{ asset('favicon.png') }}"height="24" alt="Logo O'flix">
+            <a href="{{ path('app_main_home') }}" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none header-logo">
+                <img src="{{ asset('favicon.png') }}" height="24" alt="Logo O'flix">
                 <span class="header-logo__title">O'flix</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -35,13 +35,13 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">Accueil</a>
+                        <a class="nav-link active" href="{{ path('app_main_home') }}">Accueil</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="./list.html"><i class="bi bi-film"></i> Films, séries TV</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="./favorites.html"><i class="bi bi-bookmark"></i> Ma liste</a>
+                        <a class="nav-link" href="{{ path('app_favorites_list') }}"><i class="bi bi-bookmark"></i> Ma liste</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -78,7 +78,7 @@
     <!-- footer -->
     <footer class="container-fluid py-4 border-top text-center">
         <span class="text-muted">O'flix made with &hearts; at O'clock !
-            <br><small>Thème :<a href="" class="link-secondary text-decoration-none"><i class="bi bi-toggle-on mx-1"></i>Netflix</a></small>
+            <br><small>Thème :<a href="" class="link-secondary text-decoration-none"><i class="bi bi-toggle-on mx-1"></i>Netflix</a></small></a>
         </span>
     </footer>
 

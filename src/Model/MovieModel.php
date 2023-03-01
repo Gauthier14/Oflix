@@ -72,9 +72,16 @@ class MovieModel
      * Retourne un film selon son index
      * 
      * @param int $id L'index du film dans le tableau
+     * @return array|null Les données du film
      */
-    public function getMovieById(int $id): array
+    public function getMovieById(int $id): ?array
     {
-        return $this->movies[$id];
+        if (!array_key_exists( $id , $this->movies))
+        {
+        return null ;
+        }
+
+    return $this->movies[$id];
+
     }
 }

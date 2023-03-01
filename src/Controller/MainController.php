@@ -32,23 +32,28 @@ class MainController extends AbstractController
     /**
      * Affiche un film
      * 
-     * @Route("/movie/show/{id}", name="app_main_movie_show")
+     * @Route("/movie/show/{id}", name="app_main_movie_show", requirements={"id"="\d+"})
      */
     public function movieShow(int $id)
     {
-
+        dump($id);
         // => utiliser le modèle pour récupérer le film concerné
+        // on crée une instance de la classe MovieModel
         $movieModel = new MovieModel();
+        // puis on utilise ses méthodes
         $movie = $movieModel->getMovieById($id);
-
         dump($movie);
+        // si $movie est null, on renvoie une 404
+        if ($movie === null) {
+            // @see https://symfony.com/doc/5.4/controller.html#managing-errors-and-404-pages
+            throw $this->createNotFoundException('Film non trouvé.');
+        }
 
+        // on transmet le film à la vue
         return $this->render('main/movie_show.html.twig', [
-            'id' => $id,
             'movie' => $movie,
+            'id' => $id
         ]);
-        // @todo bonus : rendre cette route dynamique avec l'id du film
-
     }
 
     

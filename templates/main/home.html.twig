@@ -1,10 +1,15 @@
 {% extends 'base.html.twig' %}
 
 {# ce contenu HTML va aller dans le block title du parent #}
-{% block title %}Films, séries TV et popcorn en illimité{% endblock %}
 
 {# ce contenu HTML va aller dans le block body du parent #}
 {% block body %}
+
+    {# affiche un dump dans la WebDebugToolbar (WDT) #}
+    {# {% dump 'une donnée' %} #}
+
+    {# affiche un dump dans le template HTML / moins recommandé #}
+    {# {{ dump('une donnée') }} #}
 
     <!-- main -->
     <div class="my-5 py-5 text-center">
@@ -44,17 +49,21 @@
             <div class="col-12 col-lg-9">
     
                 <h2 class="text-muted fw-bold mb-4">Les nouveautés</h2>
-
+    
+                {# on boucle sur nos films #}
+                {# @see https://twig.symfony.com/doc/3.x/tags/for.html#iterating-over-keys-and-values #}
                 {% for index, movie in movies %}
                 <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm bg-white position-relative">
                     <div class="col-4 movie__poster"
-                        style="background-image: url({{ movie.poster }}">
+                        style="background-image: url('{{ movie.poster }}');">
                         <img src="images/poster-placeholder.png" class="img-fluid">
                         <!-- img src="https://m.media-amazon.com/images/M/MV5BNThmZGY4NzgtMTM4OC00NzNkLWEwNmEtMjdhMGY5YTc1NDE4XkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg" class="img-fluid" -->
                     </div>
                     <div class="col-8 p-4 d-flex flex-column position-static">
-                        <a href="./favorites.html" class="movie__favorite fs-1 my-2 mx-3 link-danger"><i
-                                class="bi bi-bookmark-plus"></i></a>
+
+                        {# @see https://symfony.com/doc/5.4/templates.html#including-templates #}
+                        {{ include('favorites/_bookmark.html.twig', {movie_id: index}) }}
+
                         <strong class="d-inline-block mb-2 text-primary">{{ movie.type }}</strong>
                         <h3 class="mb-1">{{ movie.title }}</h3>
                         <div class="mb-1 text-muted">{{ movie.duration }} min</div>
@@ -68,13 +77,13 @@
                             <i class="bi bi-star-half"></i>
                             <span class="ps-1">{{ movie.rating }}</span>
                         </div>
-                        <a href="{{ path('app_main_movie_show', {id : index}  )}} " class="fs-1 mt-3 text-danger align-self-start">
+                        <a href="{{ path('app_main_movie_show', {id: loop.index0}) }}" class="fs-1 mt-3 text-danger align-self-start">
                             <i class="bi bi-arrow-right-square"></i>
                         </a>
                     </div>
                 </div>
                 {% endfor %}
-        
+    
             <nav class="col-lg-9 offset-lg-3">
                 <ul class="pagination">
                     <li class="page-item disabled">
