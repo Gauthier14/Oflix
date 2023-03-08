@@ -19,6 +19,8 @@ class FavoritesController extends AbstractController
 
         // on récupère les favoris ou un tableau vide
         $favorites = $session->get('favorites', []); // $favorites = $_SESSION['favorites'];
+
+        // TWIG PEUT ACCEDER DIRECTEMENT A LA SESSION VIA app.session.get('favorites')
         dump($session);
 
         // on les transmet à la vue pour les afficher
@@ -57,6 +59,8 @@ class FavoritesController extends AbstractController
         // on écrase les favoris en session par cette nouvelle liste de favoris
         $session->set('favorites', $favorites); // $_SESSION['favorites'] = $favorites;
 
+        // message "flash" stocké en session, à afficher sur la page de redirection
+        // @see https://symfony.com/doc/5.4/session.html#flash-messages
         // attention le addFlash renvoi un tableau de message (ici ya qu'un message) qui nous oblige à boucler dessus dans le template
         $this->addFlash(
             'success',

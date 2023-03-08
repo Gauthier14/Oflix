@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Movie;
 use App\Model\MovieModel;
+use App\Repository\GenreRepository;
+use App\Repository\MovieRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,18 +17,22 @@ class MainController extends AbstractController
      * 
      * @Route("/", name="app_main_home")
      */
-    public function home()
+    public function home(MovieRepository $movieRepository, GenreRepository $genreRepository)
     {
 
 
-        $movieModel = new MovieModel() ;
 
-        $movies = $movieModel->getMovies();
+        // on récupère la liste des films lesp lus récents (dump() pour vérifier)
+        $movies = $movieRepository->findBy([], ['releaseDate' => 'DESC']);
 
-        dump($movies);
+        // les genres
+        $genres = $genreRepository->findBy([], ['name' => 'ASC']);
+
+        dump($genres);
 
         return $this->render('main/home.html.twig' , [
             'movies' => $movies,
+            'genres' => $genres,
         ]);
     }
 
@@ -34,15 +41,12 @@ class MainController extends AbstractController
      * 
      * @Route("/movie/show/{id}", name="app_main_movie_show", requirements={"id"="\d+"})
      */
-    public function movieShow(int $id)
+    public function movieShow(Movie $movie = null)
     {
-        dump($id);
-        // => utiliser le modèle pour récupérer le film concerné
-        // on crée une instance de la classe MovieModel
-        $movieModel = new MovieModel();
-        // puis on utilise ses méthodes
-        $movie = $movieModel->getMovieById($id);
+        // le film a été récupéré par le ParamConverter de Symfony
         dump($movie);
+
+
         // si $movie est null, on renvoie une 404
         if ($movie === null) {
             // @see https://symfony.com/doc/5.4/controller.html#managing-errors-and-404-pages
@@ -52,7 +56,6 @@ class MainController extends AbstractController
         // on transmet le film à la vue
         return $this->render('main/movie_show.html.twig', [
             'movie' => $movie,
-            'id' => $id
         ]);
     }
 

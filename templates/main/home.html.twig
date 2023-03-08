@@ -27,22 +27,9 @@
             <div class="col-12 col-lg-3">
                 <h2 class="text-center text-muted fw-bold mb-4">Les genres</h2>
                 <ul class="d-flex flex-column flex-wrap list-unstyled justify-content-center">
-                    <li class="btn btn-sm btn-outline-danger mx-1 mb-2">Action</li>
-                    <li class="btn btn-sm btn-outline-danger mx-1 mb-2">Animation</li>
-                    <li class="btn btn-sm btn-outline-danger mx-1 mb-2">Aventure</li>
-                    <li class="btn btn-sm btn-outline-danger mx-1 mb-2">Comédie</li>
-                    <li class="btn btn-sm btn-outline-danger mx-1 mb-2">Dessin animé</li>
-                    <li class="btn btn-sm btn-outline-danger mx-1 mb-2">Documentaire</li>
-                    <li class="btn btn-sm btn-outline-danger mx-1 mb-2">Drame</li>
-                    <li class="btn btn-sm btn-outline-danger mx-1 mb-2">Espionnage</li>
-                    <li class="btn btn-sm btn-outline-danger mx-1 mb-2">Famille</li>
-                    <li class="btn btn-sm btn-outline-danger mx-1 mb-2">Fantastique</li>
-                    <li class="btn btn-sm btn-outline-danger mx-1 mb-2">Historique</li>
-                    <li class="btn btn-sm btn-outline-danger mx-1 mb-2">Policier</li>
-                    <li class="btn btn-sm btn-outline-danger mx-1 mb-2">Romance</li>
-                    <li class="btn btn-sm btn-outline-danger mx-1 mb-2">Science-fiction</li>
-                    <li class="btn btn-sm btn-outline-danger mx-1 mb-2">Thriller</li>
-                    <li class="btn btn-sm btn-outline-danger mx-1 mb-2">Western</li>
+                {% for genre in genres %}
+                    <li class="btn btn-sm btn-outline-danger mx-1 mb-2"><a class= "text-decoration-none text-danger href="#">{{genre.name}}</a></li>
+                {% endfor %}
                 </ul>
             </div>
     
@@ -56,7 +43,7 @@
                 <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm bg-white position-relative">
                     <div class="col-4 movie__poster"
                         style="background-image: url('{{ movie.poster }}');">
-                        <img src="images/poster-placeholder.png" class="img-fluid">
+                        <img src="{{ asset('images/poster-placeholder.png') }}" class="img-fluid">
                         <!-- img src="https://m.media-amazon.com/images/M/MV5BNThmZGY4NzgtMTM4OC00NzNkLWEwNmEtMjdhMGY5YTc1NDE4XkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg" class="img-fluid" -->
                     </div>
                     <div class="col-8 p-4 d-flex flex-column position-static">
@@ -77,7 +64,7 @@
                             <i class="bi bi-star-half"></i>
                             <span class="ps-1">{{ movie.rating }}</span>
                         </div>
-                        <a href="{{ path('app_main_movie_show', {id: loop.index0}) }}" class="fs-1 mt-3 text-danger align-self-start">
+                        <a href="{{ path('app_main_movie_show', {id: movie.id}) }}" class="fs-1 mt-3 text-danger align-self-start">
                             <i class="bi bi-arrow-right-square"></i>
                         </a>
                     </div>
