@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Movie;
 use App\Entity\Casting;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Casting>
@@ -37,6 +38,39 @@ class CastingRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * Récupère les castings et les personnes associées (DQL)
+     */
+    public function findByMovieJoinedToPerson(Movie $movie)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT c, p -- sélectionne les objets Casting et Person
+            FROM App\Entity\Casting AS c -- depuis l entité Casting
+            INNER JOIN c.person AS p -- avec une jointure sur Casting.person
+            WHERE c.movie = :movie -- où le film du Casting...
+            ORDER BY c.creditOrder ASC'
+        )->setParameter('movie', $movie); // ... est le film fourni en entrée
+
+        return $query->getResult();
+    }
+
+        /**
+     * Idem en QueryBuilder
+     */
+    public function findByMovieJoinedToPersonQb(Movie $movie): array
+    {
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.person', 'p')
+            ->addSelect('p')
+            ->where('c.movie = :movie')
+            ->setParameter('movie', $movie)
+            ->orderBy('c.creditOrder')
+            ->getQuery()
+            ->getResult();
     }
 
 //    /**

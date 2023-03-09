@@ -39,6 +39,51 @@ class MovieRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * Liste des films par ordre alphabétique (DQL)
+     * @see https://symfony.com/doc/current/doctrine.html#querying-for-objects-the-repository
+     */
+    public function findAllOrderedByTitleAscDql()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT m
+            FROM App\Entity\Movie AS m
+            ORDER BY m.title ASC'
+        );
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
+    /**
+     * Liste des films par ordre alphabétique (QB)
+     * 
+     * @see https://symfony.com/doc/current/doctrine.html#querying-for-objects-the-repository
+     */
+    public function findAllOrderedByTitleAscQb()
+    {
+        return $this->createQueryBuilder('m')
+        ->orderBy('m.title', 'ASC')
+        ->getQuery()
+        ->getResult();
+    }
+
+    /**
+     * Liste des films les plus récents (QB)
+     * 
+     * @see https://symfony.com/doc/current/doctrine.html#querying-for-objects-the-repository
+     */
+    public function findAllForHomePage()
+    {
+        return $this->createQueryBuilder('m')
+            ->orderBy('m.releaseDate', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Movie[] Returns an array of Movie objects
 //     */

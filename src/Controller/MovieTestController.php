@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Faker\Factory;
 use App\Entity\Genre;
 use App\Entity\Movie;
 use App\Entity\Season;
@@ -25,10 +26,9 @@ class MovieTestController extends AbstractController
     {
         // @see https://symfony.com/doc/5.4/doctrine.html#fetching-objects-from-the-database
 
-        // on va chercher les films dans le repository de l'entité
-        $movies = $movieRepository->findAll();
-        // dump and die / => dump et stop le programme
-        dd($movies);
+        $faker = Factory::create();
+        $test= $faker->name();
+        dd($test);
     }
 
     /**
