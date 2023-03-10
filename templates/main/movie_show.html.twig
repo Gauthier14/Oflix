@@ -66,6 +66,8 @@
                         <dd class="col-sm-12">{{ movie.releaseDate|date('d-m-Y') }}</dd>
                     </dl>
 
+                    <p><a href="{{ path('app_main_review_add', {id: movie.id})  }}" class="btn btn-success">Ajouter une critique sur le film ({{ movie.title }})</a></p>
+
                 </div>
             </div>
 

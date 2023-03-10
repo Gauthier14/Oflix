@@ -3,10 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Movie;
+use App\Entity\Review;
+use App\Form\ReviewType;
 use App\Model\MovieModel;
-use App\Repository\CastingRepository;
 use App\Repository\GenreRepository;
 use App\Repository\MovieRepository;
+use App\Repository\ReviewRepository;
+use App\Repository\CastingRepository;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -74,6 +79,41 @@ class MainController extends AbstractController
         $movies = $movieRepository->findAllOrderedByTitleAscQb();
         dd($movies);
     }
+
+
+    /**
+     * Add reviews
+     * 
+     * @Route("//movie/{id}/review/add", name="app_main_review_add", requirements={"id"="\d+"},  methods={"GET", "POST"})
+     */
+    public function add(ReviewRepository $reviewRepository, Request $request, Movie $movie)
+    {  
+
+        // on crée un objet post
+        $review = new Review();
+
+        // 2ème argument $data = valeurs par défaut du form, ici, les propriétés de l'entité
+        $form = $this->createForm(ReviewType::class, $review);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $review->setMovie($movie);
+
+            $reviewRepository->add($review, true);
+
+            return $this->redirectToRoute('app_main_home');
+        }
+
+
+        return $this->renderForm('main/review_add.html.twig', [
+            'form' => $form,
+            'movie' => $movie,
+        ]);
+        
+    }
+    
 
 
 

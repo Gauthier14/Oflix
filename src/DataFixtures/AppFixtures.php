@@ -2,113 +2,141 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Casting;
+use Faker\Factory;
 use App\Entity\Genre;
 use App\Entity\Movie;
 use App\Entity\Person;
 use App\Entity\Season;
-use DateTime;
-use Faker\Factory;
-use Doctrine\Bundle\FixturesBundle\Fixture;
+use DateTimeImmutable;
+use App\Entity\Casting;
 use Doctrine\Persistence\ObjectManager;
-use PhpParser\Node\Expr\Cast\Array_;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use App\DataFixtures\Provider\OflixProvider;
 
 class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-    $movies = [];
-    $persons = [];
+        // Faker
+        $faker = Factory::create('fr_FR');
+        // on ajout notre provider à Faker
+        $faker->addProvider(new OflixProvider());
 
-    for ($i = 1; $i <= 50; $i++) {
-        $person = new Person();
-        $faker = Factory::create();
-        $person->setFirstname($faker->firstName());
-        $person->setLastname($faker->lastName());
-        $manager->persist($person);
-        array_push($persons, $person);
-    }
+        // Genres
 
-    $genreComedie = new Genre();
-    $genreComedie->setName('Comédie');
-    $manager->persist($genreComedie);
+        // Tableau pour relation avec les films
+        $genresList = [];
 
-    $genreThriller = new Genre();
-    $genreThriller->setName('Thriller');
-    $manager->persist($genreThriller);
+        for ($g = 1; $g <= 20; $g++) {
 
-    $genreHorreur = new Genre();
-    $genreHorreur->setName('Horreur');
-    $manager->persist($genreHorreur);
+            // Nouveau genre
+            $genre = new Genre();
+            // un genre unique !
+            // @see https://fakerphp.github.io/#modifiers
+            $genre->setName($faker->unique()->movieGenre());
 
-    $genreDocumentaire = new Genre();
-    $genreDocumentaire->setName('Documentaire');
-    $manager->persist($genreDocumentaire);
+            // On l'ajoute à la liste pour usage ultérieur
+            $genresList[] = $genre;
 
-    $genreAction = new Genre();
-    $genreAction->setName('Action');
-    $manager->persist($genreAction);
-
-    $genreLove = new Genre();
-    $genreLove->setName('Love');
-    $manager->persist($genreLove);
-
-    $genres = [$genreAction, $genreComedie, $genreDocumentaire, $genreHorreur, $genreLove];
-
-    $types = array("Film", "Série");
-
-
-
-    for ($i = 1; $i <= 50; $i++) 
-    {
-        $movie = new Movie();
-        $faker = Factory::create();
-        $movie->setTitle($faker->sentence());
-        $movie->setDuration($faker->numberBetween(1, 300));
-        $movie->setSummary($faker->text(100));
-        $movie->setSynopsis($faker->text(100));
-        $movie->setPoster('https://picsum.photos/id/' . mt_rand(1, 100) . '/450/300');
-        $movie->setReleaseDate($faker->DateTime());
-        $movie->setType($types[array_rand($types)]);
-
-        foreach ($genres as $genre) {
-            $movie->addGenre($genre);
+            // On persiste
+            $manager->persist($genre);
         }
 
-        $movie->setRating($faker->randomFloat(1, 0, 5));
+        // Persons
 
-        if ($movie->getType() === 'Série') {
-            // Si oui on crée une bouble for avec un numéro aléatoire dans la condition pour déterminer le nombre de saisons
-            // mt_rand() ne sera exécuté qu'une fois en début de boucle
-            for ($s = 1; $s <= mt_rand(1, 8); $s++) {
-                // On créé la nouvelle entité Season
-                $season = new Season();
-                // On insert le numéro de la saison en cours $s
-                $season->setNumber($s);
-                // On insert un numéro d'épisode aléatoire
-                $season->setEpisodesNumber(mt_rand(6, 24));
-                // Puis on relie notre saison à notre série
-                $season->setMovie($movie);
-                // On persite
-                $manager->persist($season);
+        // Tableau pour nos persons
+        $personsList = [];
+
+        for ($i = 1; $i <= 200; $i++) {
+
+            // Nouvelle Person
+            $person = new Person();
+            $person->setFirstname($faker->firstName());
+            $person->setLastname($faker->lastName());
+
+            // On l'ajoute à la liste pour usage ultérieur
+            $personsList[] = $person;
+
+            // On persiste
+            $manager->persist($person);
+        }   
+
+        // Tableau pour nos films
+        $moviesList = [];
+
+        for ($m = 1; $m <= 20; $m++) {
+
+            $movie = new Movie();
+            $movie->setTitle($faker->unique()->movieTitle());
+
+            // On a 1 chance sur 2 d'avoir un film (sorte de pile ou face)
+            $movie->setType($faker->randomElement(['Film', 'Série']));
+
+            $movie->setSummary($faker->text(150));
+            $movie->setSynopsis($faker->text(500));
+
+            // on met en place une date aléatoire
+            $movie->setReleaseDate($faker->dateTimeBetween('1891-01-01', 'now'));
+
+            $movie->setDuration($faker->numberBetween(30, 263));
+            $movie->setPoster('https://picsum.photos/id/' . $faker->numberBetween(1, 100) . '/450/300');
+            // Nombre à 1 chiffre après la virgule entre 1 et 5
+            $movie->setRating($faker->randomFloat(1, 1, 5)); // 4.2, 3.4, 1.8 etc.
+
+            // les saisons
+            // On vérifie si l'entité Movie est une série ou pas
+            if ($movie->getType() === 'Série') {
+                // Si oui on crée une bouble for avec un numéro aléatoire dans la condition pour déterminer le nombre de saisons
+                // mt_rand() ne sera exécuté qu'une fois en début de boucle
+                for ($s = 1; $s <= mt_rand(1, 8); $s++) {
+                    // On créé la nouvelle entité Season
+                    $season = new Season();
+                    // On insert le numéro de la saison en cours $s
+                    $season->setNumber($s);
+                    // On insert un numéro d'épisode aléatoire
+                    $season->setEpisodesNumber(mt_rand(6, 24));
+                    // Puis on relie notre saison à notre série
+                    $season->setMovie($movie);
+                    // On persite
+                    $manager->persist($season);
+                }
             }
+
+            // genres associés
+            // on prend genre au hasard dans la liste des genres créées plus haut
+            // On ajoute de 1 à 3 films au hasard pour chaque film SANS DOUBLONS
+            $randomGenres = $faker->randomElements($genresList, $faker->numberBetween(1, 3));
+            foreach ($randomGenres as $genre) {
+                $movie->addGenre($genre);
+            }
+
+            // Les castings du film
+
+            // On ajoute de 3 à 5 castings par films au hasard pour chaque film
+            for ($c = 1; $c <= mt_rand(3, 5); $c++) {
+
+                $casting = new Casting();
+                // Les propriétés role et creditOrder
+                $casting->setRole($faker->name());
+                $casting->setCreditOrder($c);
+
+                // Les 2 associations
+                // Movie
+                $casting->setMovie($movie);
+                // Person
+                // On pioche une personne (doublons autorisés !)
+                $casting->setPerson($faker->randomElement($personsList));
+
+                // On persiste
+                $manager->persist($casting);
+            }
+
+            // On ajoute le film à la liste des films
+            $moviesList[] = $movie; // = array_push($moviesList, $movie);
+
+            // On persiste
+            $manager->persist($movie);
         }
-
-        for ($c = 1; $c <= 5; $c++) {
-            $casting = new Casting();
-            $faker = Factory::create();
-            $casting->setRole($faker->word());
-            $casting->setMovie($movie);
-            $casting->setPerson($persons[array_rand($persons)]);
-            $manager->persist($casting);
-        }
-
-
-        $manager->persist($movie);
-        array_push($movies, $movie);
-    }
-
-
 
         $manager->flush();
     }
