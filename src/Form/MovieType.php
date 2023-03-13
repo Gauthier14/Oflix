@@ -24,6 +24,8 @@ class MovieType extends AbstractType
         $builder
             ->add('title', TextType::class, [
                 'label' => 'Titre du film',
+                'empty_data' => ''
+                // gère lorsqu'on edit et qu'on supprime tout
             ])
             ->add('releaseDate', DateType::class, [
                 'label' => 'Date de sortie',
@@ -32,15 +34,18 @@ class MovieType extends AbstractType
                 'years' => range(date('Y'), 1900),
             ])
             ->add('duration', NumberType::class, [
-                'label' => 'Durée'
+                'label' => 'Durée',
+                'empty_data' => ''
             ])
             ->add('summary', TextareaType::class, [
                 'label' => 'Résumé',
                 'help' => 'Environ 150 caractères.',
+                'empty_data' => ''
             ])
             ->add('synopsis', TextareaType::class, [
                 'label' => 'Synopsis',
                 'help' => '4000 caractères max.',
+                'empty_data' => ''
             ])
             ->add('poster', UrlType::class, [
                 'label' => 'Affiche',

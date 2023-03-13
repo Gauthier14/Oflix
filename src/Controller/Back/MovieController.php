@@ -38,7 +38,7 @@ class MovieController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $movieRepository->add($movie, true);
 
-            $this->addFlash('success', 'Le film '.$movie->getTitle().' a été ajouté à la base');
+            $this->addFlash('success', "<b>{$movie->getTitle()}</b> ajouté.");
 
 
             return $this->redirectToRoute('app_back_movie_index', [],  Response::HTTP_SEE_OTHER);
@@ -71,6 +71,8 @@ class MovieController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $movieRepository->add($movie, true);
 
+            $this->addFlash('success', "<b>{$movie->getTitle()}</b> modifié.");
+
             return $this->redirectToRoute('app_back_movie_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -88,8 +90,7 @@ class MovieController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$movie->getId(), $request->request->get('_token'))) {
             $movieRepository->remove($movie, true);
         }
-
-        $this->addFlash('success', 'Le film '.$movie->getTitle().' a été supprimé de la base');
+        $this->addFlash('success', "<b>{$movie->getTitle()}</b> supprimé.");
 
 
         return $this->redirectToRoute('app_back_movie_index', [], Response::HTTP_SEE_OTHER);

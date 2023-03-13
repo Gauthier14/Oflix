@@ -1,0 +1,39 @@
+{% extends 'back/layout_back.html.twig' %}
+
+{% block title %}Liste des saisons{% endblock %}
+
+{% block body %}
+    <h1>{{ movie.title }} </h1>
+        <h2>Liste des saisons</h2>
+
+        {{ include('_flash_messages.html.twig') }}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Number</th>
+                <th>EpisodesNumber</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for season in seasons %}
+            <tr>
+                <td>{{ season.id }}</td>
+                <td>{{ season.number }}</td>
+                <td>{{ season.episodesNumber }}</td>
+                <td>
+                    <a href="{{ path('app_back_season_edit', {id: season.id, movie_id: movie.id}) }}" class="btn btn-sm btn-success">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_back_season_new', {id: movie.id}) }}">Create new</a>
+{% endblock %}

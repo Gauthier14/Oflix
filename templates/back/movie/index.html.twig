@@ -7,11 +7,7 @@
 
     <a class="btn btn-sm btn-primary mb-3" href="{{ path('app_back_movie_new') }}" class="btn btn-sm btn-success">Create new</a>
 
-    {% for message in app.flashes('success') %}
-    <div class="alert alert-success">
-        {{ message }}
-    </div>
-    {% endfor %}
+    {{ include('_flash_messages.html.twig')}}
 
 
 
@@ -41,6 +37,9 @@
                 <td>
                     <a href="{{ path('app_back_movie_show', {'id': movie.id}) }}" class="btn bt-sm btn-primary">Afficher</a>
                     <a href="{{ path('app_back_movie_edit', {'id': movie.id}) }}" class="btn bt-sm btn-warning">Modifier</a>
+                    {% if movie.type == "Série" %}
+                    <a href="{{ path('app_back_season_index', {'id': movie.id}) }}" class="btn bt-sm btn-info">Saisons</a>
+                    {% endif %}
                 </td>
             </tr>
         {% else %}

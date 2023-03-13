@@ -59,7 +59,6 @@ class Movie
 
     /**
      * @ORM\Column(type="decimal", precision=2, scale=1, nullable=true)
-     * @Assert\NotBlank
      */
     private $rating;
 
@@ -177,7 +176,7 @@ class Movie
         return $this->rating;
     }
 
-    public function setRating(?string $rating): self
+    public function setRating(string $rating): self
     {
         $this->rating = $rating;
 
