@@ -60,14 +60,25 @@ class MovieRepository extends ServiceEntityRepository
     /**
      * Liste des films par ordre alphabétique (QB)
      * 
+     * @param string $keyword Mot-clé de recherche
+     * 
      * @see https://symfony.com/doc/current/doctrine.html#querying-for-objects-the-repository
      */
-    public function findAllOrderedByTitleAscQb()
+    public function findAllOrderedByTitleAscQb(?string $keyword)
     {
-        return $this->createQueryBuilder('m')
-        ->orderBy('m.title', 'ASC')
-        ->getQuery()
-        ->getResult();
+        // on crée un QueryBuilder
+        $qb = $this->createQueryBuilder('m')
+            ->orderBy('m.title', 'ASC');
+        
+        // y'a-t-il une recherche ?
+        if ($keyword !== null) {
+            // on ajoute un condition à la requête
+            $qb->where('m.title LIKE :keyword')
+                ->setParameter('keyword', '%'.$keyword.'%');
+        }
+
+        // on retourne l'exécution de la requête
+        return $qb->getQuery()->getResult();
     }
 
     /**

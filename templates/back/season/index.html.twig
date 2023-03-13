@@ -3,17 +3,19 @@
 {% block title %}Liste des saisons{% endblock %}
 
 {% block body %}
-    <h1>{{ movie.title }} </h1>
-        <h2>Liste des saisons</h2>
+    <h1>{{ movie.title }}</h1>
+    <h2>Liste des saisons</h2>
 
-        {{ include('_flash_messages.html.twig') }}
+    {{ include('_flash_messages.html.twig') }}
+
+    <a href="{{ path('app_back_season_new', {id: movie.id}) }}" class="btn btn-sm btn-success">Ajouter une saison</a>
 
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Number</th>
-                <th>EpisodesNumber</th>
+                <th>Numéro de saison</th>
+                <th>Nombre d'épisodes</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -24,7 +26,7 @@
                 <td>{{ season.number }}</td>
                 <td>{{ season.episodesNumber }}</td>
                 <td>
-                    <a href="{{ path('app_back_season_edit', {id: season.id, movie_id: movie.id}) }}" class="btn btn-sm btn-success">edit</a>
+                    <a href="{{ path('app_back_season_edit', {id: season.id, movie_id: movie.id}) }}" class="btn btn-sm btn-warning">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -35,5 +37,4 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_back_season_new', {id: movie.id}) }}">Create new</a>
 {% endblock %}

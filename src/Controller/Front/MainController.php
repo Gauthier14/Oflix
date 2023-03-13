@@ -80,11 +80,22 @@ class MainController extends AbstractController
      * Page "Films et séries"
      * 
      * @Route("/movies", name="app_main_movies_list", methods={"GET"})
+     * @Route("/search", name="app_main_search", methods={"GET"})
      */
-    public function moviesList(MovieRepository $movieRepository)
+    public function moviesList(MovieRepository $movieRepository, GenreRepository $genreRepository, Request $request)
     {
-        $movies = $movieRepository->findAllOrderedByTitleAscQb();
-        dd($movies);
+
+        // un mot-clé de recherche est-il présent ?
+        $keyword = $request->query->get('keyword');
+
+
+        $movies = $movieRepository->findAllOrderedByTitleAscQb($keyword);
+        
+        return $this->render('front/main/movie_list.html.twig', [
+            'movies' => $movies,
+            'genres' => $genreRepository->findBy([], ['name' => 'ASC']),
+            'keyword' => $keyword,
+        ]);
     }
 
 
