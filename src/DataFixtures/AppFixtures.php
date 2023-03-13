@@ -19,6 +19,10 @@ class AppFixtures extends Fixture
     {
         // Faker
         $faker = Factory::create('fr_FR');
+
+        // pour avoir toujours les mêmes données (principe de "graine" en pseudo-aléatoire)
+        // @see https://fakerphp.github.io/#seeding-the-generator
+        $faker->seed(2025);
         // on ajout notre provider à Faker
         $faker->addProvider(new OflixProvider());
 
@@ -79,7 +83,7 @@ class AppFixtures extends Fixture
             $movie->setReleaseDate($faker->dateTimeBetween('1891-01-01', 'now'));
 
             $movie->setDuration($faker->numberBetween(30, 263));
-            $movie->setPoster('https://picsum.photos/id/' . $faker->numberBetween(1, 100) . '/450/300');
+            $movie->setPoster('https://picsum.photos/id/' . $faker->numberBetween(1, 100) . '/300/450');
             // Nombre à 1 chiffre après la virgule entre 1 et 5
             $movie->setRating($faker->randomFloat(1, 1, 5)); // 4.2, 3.4, 1.8 etc.
 

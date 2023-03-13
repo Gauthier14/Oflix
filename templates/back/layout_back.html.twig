@@ -1,0 +1,16 @@
+{# ce layout "back" hérite du layout principal #}
+{% extends "base.html.twig" %}
+
+{# sous-nav pour les pages du back #}
+{% block sub_nav %}
+
+<ul class="nav">
+    <li class="nav-item">
+        <a class="nav-link" href="{{ path('app_back_movie_index')}}">Films et séries</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link disabled">Utilisateurs</a>
+    </li>
+</ul>
+
+{% endblock %}

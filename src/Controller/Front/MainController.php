@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Front;
 
 use App\Entity\Movie;
 use App\Entity\Review;
@@ -36,7 +36,7 @@ class MainController extends AbstractController
 
         dump($genres);
 
-        return $this->render('main/home.html.twig' , [
+        return $this->render('front/main/home.html.twig' , [
             'movies' => $movies,
             'genres' => $genres,
         ]);
@@ -47,7 +47,7 @@ class MainController extends AbstractController
      * 
      * @Route("/movie/show/{id}", name="app_main_movie_show", requirements={"id"="\d+"})
      */
-    public function movieShow(Movie $movie = null, CastingRepository $castingRepository)
+    public function movieShow(Movie $movie = null, CastingRepository $castingRepository, ReviewRepository $reviewRepository)
     {
         // le film a été récupéré par le ParamConverter de Symfony
         dump($movie);
@@ -62,10 +62,17 @@ class MainController extends AbstractController
         $castings = $castingRepository->findByMovieJoinedToPerson($movie);
         dump($castings);
 
+                // Reviews
+        // dans le cas où on a pas la relation inverse
+        // on peut aller chercher les données dans le Repository
+        $reviews = $reviewRepository->findBy(['movie' => $movie]);
+
+
         // on transmet le film à la vue
-        return $this->render('main/movie_show.html.twig', [
+        return $this->render('front/main/movie_show.html.twig', [
             'movie' => $movie,
             'castings' => $castings,
+            'reviews' => $reviews,
         ]);
     }
 
@@ -103,11 +110,11 @@ class MainController extends AbstractController
 
             $reviewRepository->add($review, true);
 
-            return $this->redirectToRoute('app_main_home');
+            return $this->redirectToRoute('app_main_movie_show', ['id' => $movie->getId()]);
         }
 
 
-        return $this->renderForm('main/review_add.html.twig', [
+        return $this->renderForm('front/main/review_add.html.twig', [
             'form' => $form,
             'movie' => $movie,
         ]);

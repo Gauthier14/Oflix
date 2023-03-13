@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Front;
 
 use App\Model\MovieModel;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,10 +62,10 @@ class FavoritesController extends AbstractController
         // message "flash" stocké en session, à afficher sur la page de redirection
         // @see https://symfony.com/doc/5.4/session.html#flash-messages
         // attention le addFlash renvoi un tableau de message (ici ya qu'un message) qui nous oblige à boucler dessus dans le template
-        $this->addFlash(
-            'success',
-            "<b>{$movie['title']}</b> a été ajouté à votre liste de favoris."
-        );
+            $this->addFlash(
+                'success',
+                "<b>{$movie['title']}</b> a été ajouté à votre liste de favoris."
+            );
 
         // on redirige vers la liste
         return $this->redirectToRoute('app_favorites_list');

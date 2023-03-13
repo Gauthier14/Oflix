@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
 use App\Model\MovieModel;
 use Symfony\Component\Routing\Annotation\Route;

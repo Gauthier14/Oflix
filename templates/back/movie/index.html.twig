@@ -1,0 +1,55 @@
+{% extends 'back/layout_back.html.twig' %}
+
+{% block title %}Liste des films et séries{% endblock %}
+
+{% block body %}
+    <h1>Liste des films et séries</h1>
+
+    <a class="btn btn-sm btn-primary mb-3" href="{{ path('app_back_movie_new') }}" class="btn btn-sm btn-success">Create new</a>
+
+    {% for message in app.flashes('success') %}
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+    {% endfor %}
+
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Titre</th>
+                <th>Sorti le</th>
+                <th>Durée</th>
+                <th>Affiche</th>
+                <th>Note</th>
+                <th>Type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for movie in movies %}
+            <tr>
+                <td>{{ movie.id }}</td>
+                <td class="text-truncate">{{ movie.title }}</td>
+                <td>{{ movie.releaseDate ? movie.releaseDate|date('Y') : '' }}</td>
+                <td class="text-end">{{ movie.duration }} min</td>
+                <td><img src="{{ movie.poster }}" height="50"></td>
+                <td>{{ movie.rating }}</td>
+                <td>{{ movie.type }}</td>
+                <td>
+                    <a href="{{ path('app_back_movie_show', {'id': movie.id}) }}" class="btn bt-sm btn-primary">Afficher</a>
+                    <a href="{{ path('app_back_movie_edit', {'id': movie.id}) }}" class="btn bt-sm btn-warning">Modifier</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+{% endblock %}

@@ -6,6 +6,7 @@ use App\Repository\MovieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=MovieRepository::class)
@@ -21,26 +22,32 @@ class Movie
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
      */
     private $title;
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\NotBlank
+     * 
      */
     private $releaseDate;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Assert\NotBlank
      */
     private $duration;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
      */
     private $summary;
 
     /**
      * @ORM\Column(type="string", length=4000)
+     * @Assert\NotBlank
      */
     private $synopsis;
 
@@ -51,16 +58,21 @@ class Movie
 
     /**
      * @ORM\Column(type="decimal", precision=2, scale=1, nullable=true)
+     * @Assert\NotBlank
      */
     private $rating;
 
     /**
      * @ORM\OneToMany(targetEntity=Season::class, mappedBy="movie")
+     * 
      */
     private $seasons;
 
     /**
      * @ORM\ManyToMany(targetEntity=Genre::class, inversedBy="movies")
+     * @Assert\NotBlank
+     * @ORM\OrderBy({"name"="ASC"})
+     * 
      */
     private $genres;
 
@@ -72,8 +84,15 @@ class Movie
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     * @Assert\Choice(
+     *         choices = {"Film", "Série"},
+     *         message = "Type non valide"
+     * )
      */
     private $type;
+
+    
 
     public function __construct()
     {
@@ -82,6 +101,9 @@ class Movie
         $this->seasons = new ArrayCollection();
         $this->genres = new ArrayCollection();
         $this->castings = new ArrayCollection();
+
+        $this->releaseDate = new \DateTimeImmutable();
+        
     }
 
     public function getId(): ?int
@@ -94,7 +116,7 @@ class Movie
         return $this->title;
     }
 
-    public function setTitle(string $title): self
+    public function setTitle(?string $title): self
     {
         $this->title = $title;
 
