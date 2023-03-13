@@ -28,7 +28,6 @@ class Movie
 
     /**
      * @ORM\Column(type="date")
-     * @Assert\NotBlank
      * 
      */
     private $releaseDate;
@@ -36,12 +35,14 @@ class Movie
     /**
      * @ORM\Column(type="smallint")
      * @Assert\NotBlank
+     * @Assert\Positive
      */
     private $duration;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
+     * @Assert\Length(max=175)
      */
     private $summary;
 
