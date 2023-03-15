@@ -2,6 +2,7 @@
 
 namespace App\Controller\Front;
 
+use App\Entity\Movie;
 use App\Model\MovieModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +25,7 @@ class FavoritesController extends AbstractController
         dump($session);
 
         // on les transmet à la vue pour les afficher
-        return $this->render('favorites/list.html.twig', [
+        return $this->render('/front/favorites/list.html.twig', [
             'favoris' => $favorites
         ]);
     }
@@ -36,13 +37,11 @@ class FavoritesController extends AbstractController
      * 
      * @Route("/favorites/add/{id<\d+>}", name="app_favorites_add", methods={"POST"})
      */
-    public function add(Request $request, int $id)
+    public function add(Request $request, int $id, Movie $movie = null)
     {
         // on récupère la session qui se trouve dans la requête
         $session = $request->getSession();
-
-        $movieModel = new MovieModel();
-        $movie = $movieModel->getMovieById($id);
+        dump($movie);
 
         // si $movie est null, on renvoie une 404
         if ($movie === null) {
@@ -64,7 +63,7 @@ class FavoritesController extends AbstractController
         // attention le addFlash renvoi un tableau de message (ici ya qu'un message) qui nous oblige à boucler dessus dans le template
             $this->addFlash(
                 'success',
-                "<b>{$movie['title']}</b> a été ajouté à votre liste de favoris."
+                "<b>{$movie->getTitle()}</b> a été ajouté à votre liste de favoris."
             );
 
         // on redirige vers la liste

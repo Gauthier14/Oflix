@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use Faker\Factory;
+use App\Entity\User;
 use App\Entity\Genre;
 use App\Entity\Movie;
 use App\Entity\Person;
@@ -25,6 +26,31 @@ class AppFixtures extends Fixture
         $faker->seed(2025);
         // on ajout notre provider à Faker
         $faker->addProvider(new OflixProvider());
+
+        
+        // Utilisateurs
+        
+        // admin
+        $user = new User();
+        $user->setEmail('admin@admin.com');
+        $user->setRoles(['ROLE_ADMIN']);
+        $user->setPassword('$2y$13$.PJiDK3kq2C4owW5RW6Z3ukzRc14TJZRPcMfXcCy9AyhhA9OMK3Li');
+        $manager->persist($user);
+        
+        // manager
+        $user = new User();
+        $user->setEmail('manager@manager.com');
+        $user->setRoles(['ROLE_MANAGER']);
+        $user->setPassword('$2y$13$REdYmAInUfFFy/Bsx9DPb.GiUC9YfRotv3Tt2zqrXpf7sJuTNZMpC');
+        $manager->persist($user);
+
+        // user
+        $user = new User();
+        $user->setEmail('user@user.com');
+        $user->setRoles(['ROLE_USER']);
+        $user->setPassword('$2y$13$CfDM2qlk0uDtA3pv3kbBCOpppYqWUT.EHbws9IkhMQXvBxGfxROv2');
+        $manager->persist($user);
+
 
         // Genres
 

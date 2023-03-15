@@ -6,11 +6,21 @@
 
 <ul class="nav">
     <li class="nav-item">
-        <a class="nav-link" href="{{ path('app_back_movie_index')}}">Films et séries</a>
+        <a class="nav-link" href="{{ path('app_back_movie_index') }}">Films et séries</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link disabled">Utilisateurs</a>
+        <a class="nav-link" href="{{ path('app_back_user_index') }}">Utilisateurs</a>
     </li>
 </ul>
 
 {% endblock %}
+
+{# {% block body_main %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            {% block body %}{% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %} #}
