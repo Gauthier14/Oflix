@@ -1,6 +1,20 @@
 {# le bouton inclut depuis les encarts des films #}
+
+{# Si l'id du film est présent dans les favoris en session #}
+{% if app.session.get('favorites')[movie_id] is defined %}
+
+<form action="{{ path('app_favorites_remove', {id: movie_id}) }}" method="POST">
+    <button class="movie__favorite btn fs-1 my-2 mx-3 link-danger">
+        <i class="bi bi-bookmark-x-fill"></i>
+    </button>
+</form>
+
+{% else %}
+
 <form action="{{ path('app_favorites_add', {id: movie_id}) }}" method="POST">
     <button class="movie__favorite btn fs-1 my-2 mx-3 link-danger">
         <i class="bi bi-bookmark-plus"></i>
     </button>
 </form>
+
+{% endif %}
