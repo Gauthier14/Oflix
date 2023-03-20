@@ -45,7 +45,7 @@ class MainController extends AbstractController
     /**
      * Affiche un film
      * 
-     * @Route("/movie/show/{id}", name="app_main_movie_show", requirements={"id"="\d+"})
+     * @Route("/movie/show/{slug}", name="app_main_movie_show")
      */
     public function movieShow(Movie $movie = null, CastingRepository $castingRepository, ReviewRepository $reviewRepository)
     {

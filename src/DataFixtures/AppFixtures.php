@@ -13,9 +13,17 @@ use App\Entity\Casting;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use App\DataFixtures\Provider\OflixProvider;
+use App\Service\MySlugger;
+
 
 class AppFixtures extends Fixture
 {
+    private $slugger;
+
+    public function __construct(MySlugger $slugger)
+    {
+        $this->slugger = $slugger;
+    }
     public function load(ObjectManager $manager): void
     {
         // Faker
@@ -26,6 +34,8 @@ class AppFixtures extends Fixture
         $faker->seed(2025);
         // on ajout notre provider à Faker
         $faker->addProvider(new OflixProvider());
+
+    
 
         
         // Utilisateurs
@@ -112,6 +122,8 @@ class AppFixtures extends Fixture
             $movie->setPoster('https://picsum.photos/id/' . $faker->numberBetween(1, 100) . '/300/450');
             // Nombre à 1 chiffre après la virgule entre 1 et 5
             $movie->setRating($faker->randomFloat(1, 1, 5)); // 4.2, 3.4, 1.8 etc.
+
+            $movie->setSlug($this->slugger->slugify($movie->getTitle()));
 
             // les saisons
             // On vérifie si l'entité Movie est une série ou pas

@@ -61,9 +61,11 @@ class FavoritesController extends AbstractController
     public function remove(Movie $movie, FavoritesManager $favoritesManager) 
     {
         // si $movie est null, on renvoie une 404
+
         if ($movie === null) {
             throw $this->createNotFoundException('Film non trouvé.');
         }
+        // si le favorite manager renvoie false alors il a pas trouvé le favoris : 
         if (!$favoritesManager->remove($movie)) {
             throw $this->createNotFoundException('Favoris non trouvé.');
         }

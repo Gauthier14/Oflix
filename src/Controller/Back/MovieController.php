@@ -5,6 +5,7 @@ namespace App\Controller\Back;
 use App\Entity\Movie;
 use App\Form\MovieType;
 use App\Repository\MovieRepository;
+use App\Service\MySlugger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,13 +30,14 @@ class MovieController extends AbstractController
     /**
      * @Route("/new", name="app_back_movie_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, MovieRepository $movieRepository): Response
+    public function new(Request $request, MovieRepository $movieRepository, MySlugger $mySlugger): Response
     {
         $movie = new Movie();
         $form = $this->createForm(MovieType::class, $movie);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $movie->setSlug($mySlugger->slugify($movie->getTitle()));
             $movieRepository->add($movie, true);
 
             $this->addFlash('success', "<b>{$movie->getTitle()}</b> ajouté.");
@@ -63,12 +65,13 @@ class MovieController extends AbstractController
     /**
      * @Route("/{id}/edit", name="app_back_movie_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Movie $movie, MovieRepository $movieRepository): Response
+    public function edit(Request $request, Movie $movie, MovieRepository $movieRepository, MySlugger $mySlugger): Response
     {
         $form = $this->createForm(MovieType::class, $movie);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $movie->setSlug($mySlugger->slugify($movie->getTitle()));
             $movieRepository->add($movie, true);
 
             $this->addFlash('success', "<b>{$movie->getTitle()}</b> modifié.");
