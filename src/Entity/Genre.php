@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 // accès aux classes de mapping de Doctrine
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=GenreRepository::class)
@@ -27,6 +28,7 @@ class Genre
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({"get_collection", "get_genres_collection"})
      */
     private $name;
 

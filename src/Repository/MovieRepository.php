@@ -95,6 +95,27 @@ class MovieRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findOneRandomMovie()
+    {
+        $sql = "SELECT title, slug from movie ORDER BY RAND() LIMIT 1";
+        $connexion = $this->getEntityManager()->getConnection();
+        $result = $connexion->executeQuery($sql)->fetchAssociative();
+        return $result;
+    }
+
+    public function findOneRandomMovieDQL()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT m
+            FROM App\Entity\Movie m
+            ORDER BY RAND()'
+        );
+
+        return $query->setMaxResults(1)->getOneOrNullResult();
+    }
+
 //    /**
 //     * @return Movie[] Returns an array of Movie objects
 //     */

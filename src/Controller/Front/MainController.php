@@ -26,14 +26,12 @@ class MainController extends AbstractController
     {
 
 
-
         // on récupère la liste des films lesp lus récents (dump() pour vérifier)
         $movies = $movieRepository->findBy([], ['releaseDate' => 'DESC']);
 
         // les genres
         $genres = $genreRepository->findBy([], ['name' => 'ASC']);
 
-        dump($genres);
 
         return $this->render('front/main/home.html.twig' , [
             'movies' => $movies,
@@ -49,7 +47,6 @@ class MainController extends AbstractController
     public function movieShow(Movie $movie = null, CastingRepository $castingRepository, ReviewRepository $reviewRepository)
     {
         // le film a été récupéré par le ParamConverter de Symfony
-        dump($movie);
 
 
         // si $movie est null, on renvoie une 404
@@ -59,7 +56,6 @@ class MainController extends AbstractController
         }
 
         $castings = $castingRepository->findByMovieJoinedToPerson($movie);
-        dump($castings);
 
                 // Reviews
         // dans le cas où on a pas la relation inverse
@@ -101,7 +97,7 @@ class MainController extends AbstractController
     /**
      * Add reviews
      * 
-     * @Route("//movie/{id}/review/add", name="app_main_review_add", requirements={"id"="\d+"},  methods={"GET", "POST"})
+     * @Route("/movie/{id}/review/add", name="app_main_review_add", requirements={"id"="\d+"},  methods={"GET", "POST"})
      */
     public function add(ReviewRepository $reviewRepository, Request $request, Movie $movie)
     {  
@@ -120,7 +116,7 @@ class MainController extends AbstractController
 
             $reviewRepository->add($review, true);
 
-            return $this->redirectToRoute('app_main_movie_show', ['id' => $movie->getId()]);
+            return $this->redirectToRoute('app_main_movie_show', ['slug' => $movie->getSlug()]);
         }
 
 

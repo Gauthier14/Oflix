@@ -14,14 +14,39 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        # API login
+        login:
+            # ici on definit la config de tout
+            # endpoint qui commence par "/api/login"
+            pattern: ^/api/login
+            # ici stateless indique que la securité sera sans 
+            # etat (le serveur ne stock 
+            # pas l'etat de l'utilisateur authentifié)
+            stateless: true
+            json_login:
+                # ici le endpoint pour obtenir le token
+                check_path: /api/login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+        api:
+            pattern: ^/api
+            stateless: true
+            # pour les routes sécurisées (access_control etc.), un JWT es nécessaire
+            jwt: ~
         main:
             lazy: true
             provider: app_user_provider
             custom_authenticator: App\Security\LoginFormAuthenticator
+
+
+
+            # form_login:
+            #     # name of the route created previously
+            #     login_path: login_index # GET => affiche le form
+            #     check_path: login_index # POST => traite le form
+            
             logout:
                 path: app_logout
-                # where to redirect after logout
-                # target: app_any_route
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -52,6 +77,8 @@ security:
         - { path: ^/back, roles: ROLE_MANAGER }
         # toutes les routes qui liées aux favoris et aux reviews
         - { path: (favorites|review), roles: ROLE_USER }
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api, roles: ROLE_ADMIN }
         
 
     role_hierarchy:

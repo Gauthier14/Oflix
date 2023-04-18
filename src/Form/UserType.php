@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\User;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -32,9 +34,36 @@ class UserType extends AbstractType
                     'class' => 'checkbox-inline',
                 ],
             ])
-            ->add('password', PasswordType::class, [
-            'help' => 'Make sure it\'s at least 15 characters OR at least 8 characters including a number and a lowercase letter.',
-            ])
+            // ->add('password', PasswordType::class, [
+            // 'help' => 'Make sure it\'s at least 15 characters OR at least 8 characters including a number and a lowercase letter.',
+            // ])
+            ->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+                $form = $event->getForm();
+                $user = $event->getData();
+
+                if($user->getId() !== null) 
+                {
+                $form->add('password', PasswordType::class, [
+                    // ce champ n'est plus "mappé" entre le form et l'entité
+                    // le form ne mettra pas à jour automatiquement ce champ dans l'entité
+                    // @see https://symfony.com/doc/current/reference/forms/types/text.html#mapped
+                    'mapped' => false,
+                    'attr' => [
+                        'placeholder' => 'Laissez vide si inchangé...',
+                    ],
+                    'help' => 'Make sure it\'s at least 15 characters OR at least 8 characters including a number and a lowercase letter.',
+                ]);
+                }
+
+                else
+                {
+                $form->add('password', PasswordType::class, [
+                'help' => 'Make sure it\'s at least 15 characters OR at least 8 characters including a number and a lowercase letter.',
+                ]);
+                }
+
+
+            })
             ;
     }
 

@@ -70,7 +70,7 @@ class UserController extends AbstractController
      */
     public function edit(Request $request, User $user, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher): Response
     {
-        $form = $this->createForm(UserEditType::class, $user);
+        $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -80,6 +80,7 @@ class UserController extends AbstractController
 
             /** @var string|null $newPassword Le mot de passe présent dans le formulaire */
             $newPassword = $form->get('password')->getData();
+
 
             // si un mot de passe est présent, on le hache et on le transmet au $user
             if ($newPassword !== null) {

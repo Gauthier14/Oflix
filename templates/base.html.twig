@@ -56,10 +56,6 @@
                             <span>{{ app.user.email }}</span>
                             <i class="bi bi-person-square"></i>
                         </a>
-
-                        {# possibilité avec un tableau assoc. #}
-                        {# {% set roles = {"ROLE_USER" : "Utilisateur","ROLE_MANAGER" : "Manager","ROLE_ADMIN" : "Administrateur"} %} #}
-
                         <ul class="dropdown-menu">
                             <li><h6 class="dropdown-header">
                                 {# possibilité avec un tableau assoc. #}
@@ -111,6 +107,11 @@
 
     <!-- footer -->
     <footer class="container-fluid py-4 border-top text-center">
+    {% if randomMovie is defined %}
+        <div>
+        <p> Un film Random : <a href="{{path('app_main_movie_show', {slug : randomMovie.slug})}}">{{randomMovie.title}}</a></p>
+        </div>
+    {% endif %}
         <span class="text-muted">O'flix made with &hearts; at O'clock !
             <br><small>Thème :<a href="" class="link-secondary text-decoration-none"><i
                         class="bi bi-toggle-on mx-1"></i>Netflix</a></small></a>
